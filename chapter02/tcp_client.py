@@ -1,4 +1,4 @@
-# -*- /usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import socket
@@ -16,4 +16,4 @@ if __name__ == "__main__" :
             msg = input('> ')
             s.send(msg.encode())
             data = s.recv(1024)
-            print('Received from server: {}'.format(str(data)))
+            print('Received from server: {}'.format(data.decode()))
