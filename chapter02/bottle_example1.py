@@ -5,9 +5,9 @@ from bottle import route
 from bottle import run
 
 
-if __name__ == "__main__":
-    @route('/hello')
-    def index():
-        return '<h1>Hello</h1>'
+@route('/hello')
+def index():
+    return '<h1>Hello</h1>'
 
+if __name__ == "__main__":
     run(host='localhost', port=8080)
