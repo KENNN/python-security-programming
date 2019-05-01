@@ -14,12 +14,11 @@ if __name__ == '__main__':
         s.listen(1)
         print('Waiting connection ...')
 
-
         connection, address = s.accept()
         with connection:
             print('Connection from {}'.format(str(address)))
 
-            while True :
+            while True:
                 data = connection.recv(1024)
                 print('Received a message: {}'.format(data.decode()))
 
@@ -31,4 +30,3 @@ if __name__ == '__main__':
                 else:
                     connection.send(data)
                     print('Sent a message: {}'.format(data.decode()))
-

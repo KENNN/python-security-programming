@@ -3,7 +3,7 @@
 
 import socket
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
     ip = '127.0.0.1'
     port = 50000
     server = (ip, port)
@@ -12,7 +12,7 @@ if __name__ == "__main__" :
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect(server)
 
-        while msg != 'exit' :
+        while msg != 'exit':
             msg = input('> ')
             s.send(msg.encode())
             data = s.recv(1024)
