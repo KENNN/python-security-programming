@@ -8,10 +8,22 @@ from bottle import response
 from bottle import redirect
 from bottle import get
 import os
+import sys
+import random
 
 
 USER_ID = 'user1'
 os.environ['PASSWORD'] = '123456'
+token = ''
+
+
+def gen_token():
+    rand = random.SystemRandom()
+    return str(rand.randint(0, sys.maxint))
+
+
+def validate_token():
+    return token == request.forms.get('token')
 
 
 def is_logged_in():
@@ -22,18 +34,24 @@ def is_logged_in():
 def authenticate(user_id, password):
     if user_id == USER_ID and password == os.environ['PASSWORD']:
         return True
-    else:
-        return False
+
+
+else:
+    return False
 
 
 @route('/')
 def index():
     html = '<h2> CSRF demo </h2>'
     if is_logged_in():
+        if len(token) == 0:
+            token = gen_token()
+        hidden_form = '<input type="hidden" name=token value="{}">'.format(token)  # noqa
         username = request.get_cookie('sessionid', secret='password')
         html += 'Hello {}'.format(username)
         html += '<form action="/changepassword" method="POST">'
         html += 'Change password: <input type="text" name="password" />'
+        html += hidden_form
         html += '<input type="submit" value="update" />'
         html += '</form>'
         return html
@@ -43,6 +61,8 @@ def index():
 
 @route('/changepassword', method='POST')
 def change_password():
+    if not validate_token():
+        return 'Your token is invalid.'
     if is_logged_in():
         new_password = request.forms.get('password')
         os.environ['PASSWORD'] = new_password
