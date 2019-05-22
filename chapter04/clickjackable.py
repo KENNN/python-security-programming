@@ -8,8 +8,8 @@ from bottle import run
 @route('/')
 def hello():
     html = '<h2> target web site </h2>'
-    html += '<button type="button" value="button"'
-    html += 'onclick="alert({})">'.format('Bought item A')
+    html += '<button type="button" value="button" '
+    html += 'onclick="alert(\'Bought item A\')"> '
     html += 'Buy item A </button>'
     return html
 
