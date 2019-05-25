@@ -2,14 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import click
+import string
+import random
 
 
 class Fuzzer(object):
-    def __init__(self):
-        pass
+    def __init__(self, target):
+        self.target = target
+        self.alnum = string.digits + string.ascii_letters
+        self.rand = random.SystemRandom()
 
     def gen_fuzz(self):
-        pass
+        rand_int = self.rand.randint(1, 64)
+        fuzz = random.choices(self.alnum, k=rand_int)
+        fuzz = ''.join(fuzz)
+        return fuzz
 
     def do_fuzz(self):
         pass
