@@ -4,6 +4,7 @@
 import click
 import string
 import random
+import subprocess
 
 
 class Fuzzer(object):
@@ -18,16 +19,19 @@ class Fuzzer(object):
         fuzz = ''.join(fuzz)
         return fuzz
 
-    def do_fuzz(self):
-        pass
+    def do_fuzz(self, fuzz):
+        cmd = ' '.join([self.target, fuzz])
+        ret = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True)
+        ret_code = ret.returncode
+        return ret_code
 
     def dump(self):
         pass
 
 
 @click.command()
-@click.argument('target_ip')
-def run(target_ip):
+@click.argument('target')
+def run(target):
     fuzzer = Fuzzer()
     while 1:
         fuzzer.gen_fuzz()
