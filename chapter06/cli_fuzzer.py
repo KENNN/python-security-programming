@@ -4,7 +4,9 @@
 import click
 import string
 import random
+import sys
 import subprocess
+from subprocess import PIPE
 
 
 class Fuzzer(object):
@@ -25,19 +27,30 @@ class Fuzzer(object):
         ret_code = ret.returncode
         return ret_code
 
-    def dump(self):
-        pass
+    def dump(self, fuzz, ret_code):
+        data = '{},{}\n'.format(ret_code, fuzz)
+        with open('dump.csv', 'a') as f:
+            f.write(data)
 
 
 @click.command()
 @click.argument('target')
 def run(target):
-    fuzzer = Fuzzer()
+    fuzzer = Fuzzer(target)
+    fuzz_cnt = 0
+    crash = 0
+
     while 1:
-        fuzzer.gen_fuzz()
-        ret_code = fuzzer.do_fuzz()
+        fuzz = fuzzer.gen_fuzz()
+        fuzz_cnt += 1
+        ret_code = fuzzer.do_fuzz(fuzz)
         if ret_code > 0:
-            fuzzer.dump()
+            crash += 1
+            fuzzer.dump(fuzz, ret_code)
+
+        sys.stdout.write(
+            '\rfuzz: {}, crashes: {}'.format(fuzz_cnt, crash))
+        sys.stdout.flush()
 
 
 def main():
