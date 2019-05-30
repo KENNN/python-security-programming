@@ -2,13 +2,30 @@
 # -*- coding:utf: 8 -*-
 
 import click
+import glob
 
 
 class WebAppFuzzer(object):
     def __init__(self, host, port):
-        pass
+        self.host = host
+        self.port = int(port)
+
+        files = glob.glob('./fuzzdb/attack/xss/**/*.txt', recursive=True)
+        self.fuzzdb = []
+
+        for fname in files:
+            with open(fname, 'rb') as f:
+                data = f.read().decode('utf-8').splitlines()
+                self.fuzzdb += data
+
+        with open('./http_template.txt', 'rb') as f:
+            data = f.read().decode('utf-8').replace('\n', '\r\n')
+            self.http_template = string.Template(data)
+
+        self.status_code = 0
 
     def gen_fuzz(self):
+
         pass
 
     def gen_fuzz(self):
