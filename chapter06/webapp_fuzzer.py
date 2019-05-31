@@ -24,9 +24,8 @@ class WebAppFuzzer(object):
 
         self.status_code = 0
 
-    def gen_fuzz(self):
-
-        pass
+    def gen_fuzz(self, index):
+        return self.fuzzdb[index]
 
     def gen_fuzz(self):
         pass
