@@ -3,6 +3,8 @@
 
 import click
 import glob
+import socket
+import urllib
 
 
 class WebAppFuzzer(object):
@@ -27,11 +29,20 @@ class WebAppFuzzer(object):
     def gen_fuzz(self, index):
         return self.fuzzdb[index]
 
-    def gen_fuzz(self):
-        pass
+    def do_fuzz(self, fuzz):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        with s.connect((self.host, self.port)):
+            fuzz = urllib.parse.quote(fuzz)
+            request = self.http_template.substitute(param=fuzz)
+            s.send(request.encode('utf-8'))
 
-    def do_fuzz(self):
-        pass
+            time.sleep(0.05)
+            response = ''
+            while 1:
+                buf = s.recv(1024).decode('utf-8')
+                if len(buf) < 1024:
+                    break
+        return response
 
     def is_vulnerable(self):
         pass
