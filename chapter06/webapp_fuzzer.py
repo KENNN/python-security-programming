@@ -42,10 +42,21 @@ class WebAppFuzzer(object):
                 buf = s.recv(1024).decode('utf-8')
                 if len(buf) < 1024:
                     break
+
         return response
 
-    def is_vulnerable(self):
-        pass
+    def is_vulnerable(self, fuzz, response):
+        ptn = '[1-5][0-5][0-9]'
+        match = re.search(ptn, response)
+        self.status_code = int(match.group(0))
+
+        if self.status_code >= 500:
+            return True
+
+        if fuzz in response:
+            return True
+
+        return False
 
     def dump(self):
         pass
