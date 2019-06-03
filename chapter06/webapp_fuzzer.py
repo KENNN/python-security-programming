@@ -58,8 +58,10 @@ class WebAppFuzzer(object):
 
         return False
 
-    def dump(self):
-        pass
+    def dump(self, fuzz):
+        data = str(self.status_code) + ',' + fuzz + '\n'
+        with open('dump.txt', 'a') as f:
+            f.write(data)
 
 
 @click.command()
