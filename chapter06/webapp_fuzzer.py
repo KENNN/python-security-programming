@@ -5,6 +5,7 @@ import click
 import glob
 import socket
 import urllib
+import sys
 
 
 class WebAppFuzzer(object):
@@ -70,11 +71,19 @@ class WebAppFuzzer(object):
 def run(host, port):
     fuzzer = WebAppFuzzer(host, port)
 
-    while 1:
-        fuzz = fuzzer.gen_fuzz()
+    dump_cnt = 0
+    len_fuzzdb = len(fuzzer.fuzzdb)
+    print('{} fuzz'.format(len_fuzzdb))
+    for i in range(len_fuzzdb):
+        fuzz = fuzzer.gen_fuzz(i)
         response = fuzzer.do_fuzz(fuzz)
-        if fuzzer.is_vulnerable():
-            fuzzer.dump()
+        if fuzzer.is_vulnerable(fuzsz, response):
+            dump_cnt += 1
+            fuzzer.dump(fuzz)
+
+            sys.stdout.write('\rfuzz: {}, dumped: {}'.format(i + 1, dump_cnt))
+            sys.stdout.flush()
+    print('')
 
 
 def main():
