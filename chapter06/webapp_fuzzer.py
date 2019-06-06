@@ -3,9 +3,12 @@
 
 import click
 import glob
+import string
 import socket
-import urllib
+import urllib.parse
+import time
 import sys
+import re
 
 
 class WebAppFuzzer(object):
@@ -31,8 +34,8 @@ class WebAppFuzzer(object):
         return self.fuzzdb[index]
 
     def do_fuzz(self, fuzz):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        with s.connect((self.host, self.port)):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((self.host, self.port))
             fuzz = urllib.parse.quote(fuzz)
             request = self.http_template.substitute(param=fuzz)
             s.send(request.encode('utf-8'))
@@ -41,6 +44,7 @@ class WebAppFuzzer(object):
             response = ''
             while 1:
                 buf = s.recv(1024).decode('utf-8')
+                response += buf
                 if len(buf) < 1024:
                     break
 
@@ -76,14 +80,15 @@ def run(host, port):
     print('{} fuzz'.format(len_fuzzdb))
     for i in range(len_fuzzdb):
         fuzz = fuzzer.gen_fuzz(i)
+        print('{}: {}'.format(i, fuzz))
         response = fuzzer.do_fuzz(fuzz)
-        if fuzzer.is_vulnerable(fuzsz, response):
+        if fuzzer.is_vulnerable(fuzz, response):
             dump_cnt += 1
             fuzzer.dump(fuzz)
 
-            sys.stdout.write('\rfuzz: {}, dumped: {}'.format(i + 1, dump_cnt))
-            sys.stdout.flush()
-    print('')
+        sys.stdout.write('\rfuzz: {}, dumped: {}'.format(i + 1, dump_cnt))
+        sys.stdout.flush()
+        print('')
 
 
 def main():
