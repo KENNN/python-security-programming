@@ -43,6 +43,12 @@ class user_regs_struct(ctypes.Structure):
     ]
 
 
+def dump(regs):
+    print('{0}({1}, {2}. {3})'.format(
+        regs.orig_rax, regs.rdi, regs.rsi, regs.rdx), end='')
+    print(' = ' + str(regs.rax))
+
+
 @click.command()
 @click.argument('tfile')
 def run(tfile):
