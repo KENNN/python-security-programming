@@ -21,6 +21,7 @@ class user_regs_struct(ctypes.Structure):
         ('rbp', ctypes.c_ulonglong),
         ('rbx', ctypes.c_ulonglong),
         ('r11', ctypes.c_ulonglong),
+        ('r10', ctypes.c_ulonglong),
         ('r9', ctypes.c_ulonglong),
         ('r8', ctypes.c_ulonglong),
         ('rax', ctypes.c_ulonglong),
@@ -54,9 +55,9 @@ def dump(regs):
 def run(tfile):
     libc = ctypes.CDLL(None)
     ptrace = libc.ptrace
-
     tracee_file = tfile
     child_pid = os.fork()
+
     if child_pid == 0:
         ptrace(PTRACE_TRACEME, 0, 0, 0)
         os.execl('/usr/bin/python', 'python', tracee_file)
@@ -65,7 +66,11 @@ def run(tfile):
             pid, status = os.wait()
             if status != 0:
                 regs = user_regs_struct()
-                ptrace(PTRACE_GETREGS. pid, 0, 0)
+                ptrace(PTRACE_GETREGS, pid, 0, ctypes.pointer(regs))
+
+                dump(regs)
+
+                ptrace(PTRACE_SYSCALL, pid, 0, 0)
             else:
                 sys.exit(0)
 
