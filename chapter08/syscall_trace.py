@@ -5,7 +5,7 @@ import ctypes
 import os
 import sys
 import click
-
+from syscall_table import SYSCALL_TABLE
 
 PTRACE_TRACEME = 0
 PTRACE_GETREGS = 12
@@ -45,7 +45,9 @@ class user_regs_struct(ctypes.Structure):
 
 
 def dump(regs):
-    print('{0}({1}, {2}. {3})'.format(
+    syscall = SYSCALL_TABLE[regs.orig_rax]
+    print(syscall, end='')
+    print('({1}, {2}. {3})'.format(
         regs.orig_rax, regs.rdi, regs.rsi, regs.rdx), end='')
     print(' = ' + str(regs.rax))
 
