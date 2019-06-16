@@ -3,9 +3,9 @@
 
 
 def run():
-    with open('/etc/hosts', 'r') as f:
+    with open('/etc/hosts', 'rb') as f:
         data = f.read()
-        print(data)
+        print(data.decode())
 
 
 def main():
