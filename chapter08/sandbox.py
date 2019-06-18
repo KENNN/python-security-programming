@@ -7,6 +7,9 @@ import struct
 import os
 import sys
 
+SYS_openat = 257
+
+# /usr/include/linux/ptrace.h
 PTRACE_TRACEME = 0
 PTRACE_PEEKDATA = 2
 PTRACE_POKEDATA = 5
@@ -44,3 +47,23 @@ class user_regs_struct(ctypes.Structure):
         ('fs', ctypes.c_ulonglong),
         ('gs', ctypes.c_ulonglong),
     ]
+
+
+libc = ctypes.CDLL(None)
+ptrace = libc.ptrace
+
+
+def hook(regs, pid):
+    pass
+
+
+def run():
+    pass
+
+
+def main():
+    run()
+
+
+if __name__ == '__main__':
+    main()
