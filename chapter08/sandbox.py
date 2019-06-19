@@ -6,6 +6,7 @@ import ctypes
 import struct
 import os
 import sys
+import click
 
 SYS_openat = 257
 
@@ -57,8 +58,25 @@ def hook(regs, pid):
     pass
 
 
-def run():
-    pass
+@click.command()
+@click.argument('tracee_file')
+def run(tracee_file):
+    child = os.fork()
+    if child == 0:
+        ptrace(PTRACE_TRACEME, 0, 0, 0)
+        os.execl('/usr/bin/python', 'python', tracee_file)
+    else:
+        while 1:
+            pid, status = os.wait()
+            if status != 0:
+                regs = user_regs_struct()
+                ptrace(PTRACE_GETREGS, pid, 0, ctypes.pointer(regs))
+
+                if regs.orig_rax == SYS_openat:
+                    hook(regs, pid)
+                    ptrace(PTRACE_SYSCALL, pid, 0, 0)
+                else:
+                    os._exit(0)
 
 
 def main():
