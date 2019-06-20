@@ -55,7 +55,21 @@ ptrace = libc.ptrace
 
 
 def hook(regs, pid):
-    pass
+    path = b''
+    i = 0
+    word = b''
+    while not b'\x00' in word:
+        addr = ctypes.c_ulonglong(regs.rsi + i)
+        word = ptrace(PTRACE_PEEKDATA, pid, addr, 0)
+        word = struct.pack('<1', word)
+        path += word
+        i += 4
+    path = path[:path.find(b'\x00')].decode()
+
+    if path.startswith('/etc'):
+        addr = ctypes.c_ulonglong(regs.rsi)
+        data = struct.unpack('<1', b'dum\x00')[0]
+        ptrace(PTRACE_POKEDATA, pid, addr, data)
 
 
 @click.command()
