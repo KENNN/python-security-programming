@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import click
+
 
 def gen_public_key(p, q):
     e = 65537
@@ -21,8 +23,14 @@ def encrypt(plaintext):
     return cipher
 
 
-def run():
-    pass
+@click.command()
+@click.argument('filepath')
+def run(filepath):
+    with open(filepath, 'rb') as f_txt:
+        text = f_txt.read()
+
+    result = encrypt(text)
+    print('cipher:\n{}'.format(result))
 
 
 def main():
