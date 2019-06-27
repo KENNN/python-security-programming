@@ -11,7 +11,10 @@ def ex_gcd(a, b):
 
 
 def gen_private_key(e, phi_n):
-    pass
+    gcd, d, y = ex_gcd(e, phi_n)
+    if d < 0:
+        d += phi_n
+    return d
 
 
 def decrypt(cipher):
