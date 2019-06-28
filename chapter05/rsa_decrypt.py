@@ -18,7 +18,18 @@ def gen_private_key(e, phi_n):
 
 
 def decrypt(cipher):
-    pass
+    e = 65537
+    p, q = 513131, 248021
+    n = p * q
+    phi_n = (p - 1) * (q - 1)
+    plaintext = []
+
+    d = gen_private_key(e, phi_n)
+
+    for c in cipher:
+        m = pow(c, d, n)
+        plaintext.append(chr(m))
+    return ''.join(plaintext)
 
 
 def run():
