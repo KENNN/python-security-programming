@@ -33,7 +33,13 @@ def decrypt(cipher):
 
 
 def run():
-    pass
+    cipher = [
+        86236114022, 40684851533, 4769316302, 30262751191,
+        58094127192, 118116081811, 48679148382, 1197296142,
+        77325435548, 118116081811, 39317881150
+    ]
+    plaintext = decrypt(cipher)
+    print('plaintext:\n{}'.format(plaintext))
 
 
 def main():
