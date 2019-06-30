@@ -7,7 +7,7 @@ def ex_gcd(a, b):
         return (b, 0, 1)
     else:
         gcd, x, y = ex_gcd(b % a, a)
-        return (gcd, y - int(b / a) * a, x)
+        return (gcd, y - int(b / a) * x, x)
 
 
 def gen_private_key(e, phi_n):
@@ -34,9 +34,10 @@ def decrypt(cipher):
 
 def run():
     cipher = [
-        86236114022, 40684851533, 4769316302, 30262751191,
-        58094127192, 118116081811, 48679148382, 1197296142,
-        77325435548, 118116081811, 39317881150
+        86236114022, 40684851533, 4769316302,
+        30262751191, 58094127192, 118116081811,
+        48679148382, 1197296142, 77325435548,
+        118116081811, 39317881150
     ]
     plaintext = decrypt(cipher)
     print('plaintext:\n{}'.format(plaintext))
