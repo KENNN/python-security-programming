@@ -5,7 +5,15 @@ import click
 
 
 def ksa(k):
-    pass
+    s = range(256)
+    j = 0
+
+    for i in range(256):
+        j += s[i] + k[i % len(k)]
+        j %= 256
+        s[i], s[j] = s[j], s[i]
+
+    return s
 
 
 def prga(s, text):
