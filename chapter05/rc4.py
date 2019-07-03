@@ -17,7 +17,15 @@ def ksa(k):
 
 
 def prga(s, text):
-    pass
+    j = 0
+    z = []
+    for i in range(1, len(text) + 1):
+        i %= 256
+        j = (j + s[i]) % 256
+        s[i], s[j] = s[j], s[i]
+        z.append(s[(s[i] + s[j]) % 256])
+
+    return z
 
 
 def rc4(key, text):
