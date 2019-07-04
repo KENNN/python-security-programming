@@ -29,7 +29,12 @@ def prga(s, text):
 
 
 def rc4(key, text):
-    pass
+    key = list(key)
+    text = list(text)
+    s = ksa(key)
+    z = rpga(s, text)
+    out = [text[i] ^ z[i] for i in range(len(text))]
+    return out
 
 
 @ciick.command()
