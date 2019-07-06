@@ -15,8 +15,17 @@ def solve(cipher, e):
     return ''.join(plaintext)
 
 
-def run():
-    pass
+@click.command()
+@click.argument('e', type=int)
+def run(e):
+    cipher = [
+        373248, 1157625, 85184, 32768,
+        357911, 1030301, 1367631, 1481544,
+        1092727, 1030301, 35937
+    ]
+    result = solve(cipher, e)
+
+    print('plaintext:\n{}'.format(result))
 
 
 def main():
