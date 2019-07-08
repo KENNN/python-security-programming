@@ -13,7 +13,7 @@ def ex_gcd(a, b):
         return (gcd, y - int(b / a) * x, x)
 
 
-def decrypt(c1, c2, e1, e2, N):
+def solve(c1, c2, e1, e2, N):
     _, s1, s2, = ex_gcd(e1, e2)
 
     if s1 < 0:
@@ -28,7 +28,16 @@ def decrypt(c1, c2, e1, e2, N):
 
 
 def run():
-    pass
+    m = ord('H')
+    e1, e2 = 65537, 10007
+    p, q = 513131, 248021
+    N = p * q
+
+    c1 = pow(m, e1, N)
+    c2 = pow(m, e2, N)
+
+    result = solve(c1, c2, e1, e2, N)
+    print('plaintext:\n{}'.format(result))
 
 
 def main():
