@@ -52,5 +52,7 @@ def mix_column():
     pass
 
 
-def add_roundkey():
-    pass
+def add_roundkey(data, key):
+    data = data.reshape(4, 4)
+    rkey = rkey.reshape(4, 4)
+    return data ^ rkey
