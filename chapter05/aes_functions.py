@@ -64,8 +64,11 @@ def sub_bytes(data):
     return output
 
 
-def shift_row():
-    pass
+def shift_rows(data):
+    data = data.reshape(4, 4)
+    for i in range(4):
+        data[i] = np.roll(data[i], -i, axis=0)
+    return data
 
 
 def mix_column():
