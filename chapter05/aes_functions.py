@@ -35,6 +35,13 @@ sbox = [
     0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
 ]
 
+a = np.array([
+    [2, 3, 1, 1],
+    [1, 2, 3, 1],
+    [1, 1, 2, 3],
+    [3, 1, 1, 2],
+])
+
 
 def key_schedule(key):
     w = key.reshape(4, 4)
@@ -52,11 +59,25 @@ def key_schedule(key):
 
 
 def xor_dot(mat4d, vec4):
-    pass
+    out = np.zeros([4, 1], dtype=np.int)
+    for i in range(4):
+        for j in range(4):
+            out[i] ^= g_mul(mat4d[i][j], vec4[j])
+    return out
 
 
 def g_mul(x, y):
-    pass
+    out = 0
+    for cnt in range(8):
+        if y & 1:
+            out ^= x
+        hi_bit_set = x & 0x80
+        x <<= 1
+        x &= 0xff
+        if hi_bit_set:
+            x ^= 0x1b
+            y >>= 1
+    return out
 
 
 def sub_bytes(data):
@@ -71,8 +92,13 @@ def shift_rows(data):
     return data
 
 
-def mix_column():
-    pass
+def mix_columns(data):
+    data = data.reshape(4, 4)
+    output = np.zeros([4, 4])
+    for i in range(4):
+        out = xor_dot(a, data[:, i]).reshape(4, 1)
+        output[:, i:i+1] = out
+    return output.astype(np.int)
 
 
 def add_roundkey(data, key):
