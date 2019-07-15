@@ -29,8 +29,16 @@ def encrypt_1block(key, text):
     return list(out.T.reshape(16,))
 
 
-def encrypt():
-    pass
+def encrypt(key, text):
+    key = np.array(list(key))
+    text = [text[i:i+16] for i in range(0, len(text), 16)]
+
+    cipher = []
+
+    for t in text:
+        t = np.array(list(t))
+        cipher += encrypt_1block(key, t)
+    return t
 
 
 def run():
