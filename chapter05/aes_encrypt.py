@@ -41,12 +41,22 @@ def encrypt(key, text):
     return t
 
 
-def run():
-    pass
+@click.command()
+@click.argument('f_key_path')
+@click.argument('f_txt_path')
+def run(f_key_path, f_txt_path):
+    with open(f_key_path, 'rb') as f_key, \
+            open(f_txt_path, 'rb') as f_txt, \
+            open('output.dat', 'wb') as f_out:
+        key = f_key.read()
+        text = f_txt.read()
+
+        output = encrypt(key, text)
+        f_out.write(bytearray(output))
 
 
 def main():
-    pass
+    run()
 
 
 if __name__ == "__main__":

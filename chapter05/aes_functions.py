@@ -48,9 +48,9 @@ def key_schedule(key):
     for i in range(4, 44):
         w_i = None
         if i % 4 == 0:
-            tmp = np.roll(W[i - 1], -1, axis=0)
+            tmp = np.roll(w[i - 1], -1, axis=0)
             tmp = np.array([sbox[t] for t in tmp])
-            tmp = ^= rcon[i / 4 - 1]
+            tmp ^= rcon[int(i / 4 - 1)]
             w_i = w[i - 4] ^ tmp
         else:
             w_i = w[i - 4] ^ w[i - 1]
@@ -101,7 +101,7 @@ def mix_columns(data):
     return output.astype(np.int)
 
 
-def add_roundkey(data, key):
+def add_roundkey(data, rkey):
     data = data.reshape(4, 4)
     rkey = rkey.reshape(4, 4)
     return data ^ rkey
